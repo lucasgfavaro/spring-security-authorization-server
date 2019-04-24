@@ -1,10 +1,32 @@
+buildscript {
+    ext {
+        // Spring version
+        set('springBootVersion', '2.1.4.RELEASE')
+        set('springCloudVersion', 'Greenwich.RELEASE')
+    }
+        
+    repositories {
+        mavenCentral()
+        jcenter()
+        mavenLocal()
+    	maven {
+    	    url 'https://repo.spring.io/libs-milestone'
+    	}
+    }
 
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.3.RELEASE"
+        classpath('se.transmode.gradle:gradle-docker:1.2')
+    }   
+}    
 
 plugins {
 	id 'org.springframework.boot' version '2.1.4.RELEASE'
 	id 'java'
 }
 
+apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
 group = 'com.lgf'
@@ -18,8 +40,15 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.cloud:spring-cloud-starter-oauth2'
 	compile "org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.1.4.RELEASE"
 	
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
 }

@@ -1,0 +1,32 @@
+lToolBuilders/
+.gradle
+.gradle/*
+.idea
+.idea/*
+*.ipr
+*.iml
+*.iws
+
+
+**/node_modules
+**/jspm_packages
+**/npm-debug.log
+tracker-support-ui/dist/*
+tracker-support-ui/dist/
+
+# Ignore Gradle GUI config
+gradle-app.setting
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
+
+**.classpath
+**.project
+**.settings
+
+tracker-support-api/out
