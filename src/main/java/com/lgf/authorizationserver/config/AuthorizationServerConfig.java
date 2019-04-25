@@ -1,6 +1,7 @@
 package com.lgf.authorizationserver.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,6 +18,9 @@ import org.springframework.security.oauth2.provider.token.store.InMemoryTokenSto
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
+	@Value("${redirect_uri}")
+	private String redirect_uri = "http://example.com"; 
+	
 	@SuppressWarnings("deprecation")
 	@Bean
 	public static NoOpPasswordEncoder passwordEncoder() {
@@ -26,6 +30,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	/** WORKARROUND
 	 * SE AGREGA ESTO PARA PODER PEDIR EL TOKEN CON GRANT TYPE PASSWORD 
 	 *  https://github.com/spring-projects/spring-security-oauth/issues/1328
+	 *  // TODO: VER si es necesario este tipo de Flow y sino sacarlo
 	 * **/
 	
 	private AuthenticationManager authenticationManagerBean;
@@ -41,11 +46,14 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	}
 	/** FIN WORKARROUND **/ 
 	
-
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-		clients.inMemory().withClient("tracker-support").secret("tracker-support")
-				.authorizedGrantTypes("password", "authorization_code", "refresh_token", "client_credentials")
+		clients.inMemory()
+				.withClient("tracker-support")
+				.secret("tracker-support")
+				.authorizedGrantTypes("implicit","password", "authorization_code", "refresh_token", "client_credentials")
+				.redirectUris(redirect_uri)
+				.autoApprove(true)
 				.scopes("home");
 	}
 
